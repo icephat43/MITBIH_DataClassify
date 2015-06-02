@@ -17,7 +17,7 @@ public class TransFormer {
 	private File ECGAtrFile = new File(ECGDataAtrPath);
 	private File OutputLibSVMFile = new File(OutputLibSVMPath);
 	private File OutputWekaFile = new File(OutputWekaPath);
-	private double RRinterval = 1/360;
+	//private double RRinterval = 1/360;
 	private ArrayList<String[]> FullList;
 	//extract time,sample,type,aux, where array[0,1,2,6]
 	private ArrayList<String[]> NoNoiseList;//not include type ~,+
@@ -52,6 +52,8 @@ public class TransFormer {
 			list.add(seperate);
 			line = bfr.readLine();
 		}
+		bfr.close();
+		fr.close();
 		return list;
 	}
 	
@@ -149,12 +151,12 @@ public class TransFormer {
 	
 	private String getTimeDifference(String current, String previous) throws ParseException{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd mm:ss.SSS");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC+8"));
-        if(current.split(":")[0].length()==1){
-        	current = "0" +  current;
-        }
-        Date currentDate = sdf.parse("1970-01-01 " + current);
-        Date previousDate = sdf.parse("1970-01-01 " + previous);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC+8"));
+		if(current.split(":")[0].length()==1){
+			current = "0" +  current;
+		}
+		Date currentDate = sdf.parse("1970-01-01 " + current);
+		Date previousDate = sdf.parse("1970-01-01 " + previous);
 		return Long.toString((currentDate.getTime()-previousDate.getTime()));
 	}
 }

@@ -16,12 +16,12 @@ public class MITBIH_DataClassify {
 	
 	private static void SVM() throws IOException{
 		String[] trainpara = {
-				"./Data/106_extracted.txt", //training data
+				"./Data/106_training.txt", //training data
 				"./Data/106_model.txt"};//output model
 		String[] testpara = {
-				"./Data/106_extracted.txt", //testing data, though I know I shouldn't use training data as testing data
+				"./Data/106_testing.txt", //testing data, though I know I shouldn't use training data as testing data
 				"./Data/106_model.txt", //using model
-				"./Data/out_consiquence"}; //consequence
+				"./Data/out_consiquence.txt"}; //consequence
 		svm_train.main(trainpara);
 		svm_predict.main(testpara);
 	}

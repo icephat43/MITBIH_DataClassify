@@ -14,9 +14,13 @@ public class TransFormer {
 	private String ECGDataAtrPath = "./Data/106_atr.txt";
 	private String OutputLibSVMPath = "./Data/106_extracted.txt";
 	private String OutputWekaPath = "./Data/106_extracted.arff";
+	private String OutputTrainingPath = "./Data/106_training.txt";
+	private String OutputTestingPath = "./Data/106_testing.txt";
 	private File ECGAtrFile = new File(ECGDataAtrPath);
 	private File OutputLibSVMFile = new File(OutputLibSVMPath);
 	private File OutputWekaFile = new File(OutputWekaPath);
+	private File OutputTrainingFile = new File(OutputTrainingPath);
+	private File OutputTestingFile = new File(OutputTestingPath);
 	//private double RRinterval = 1/360;
 	private ArrayList<String[]> FullList;
 	//extract time,sample,type,aux, where array[0,1,2,6]
@@ -29,6 +33,10 @@ public class TransFormer {
 			OutputLibSVMFile.createNewFile();
 		if(!OutputWekaFile.exists())
 			OutputWekaFile.createNewFile();
+		if(!OutputTestingFile.exists())
+			OutputTestingFile.createNewFile();
+		if(!OutputTrainingFile.exists())
+			OutputTrainingFile.createNewFile();
 	}
 	
 	public void TransForm() throws IOException, ParseException {
@@ -38,8 +46,44 @@ public class TransFormer {
 		RRiperData = getRRiperData();
 		OutputSVMData();
 		OutputWekaData();
+		OutputSVMTrainingData();
+		OutputSVMTestingData();
 	}
 	
+	private void OutputSVMTestingData() throws IOException {
+		FileWriter fw = new FileWriter(OutputTestingFile);
+		String temp ="";
+		String[] t;
+		for(int i=1;i<(ArrythmiaList.size()/2+1);i++){
+			t = ArrythmiaList.get(i);
+			if(t[2].equalsIgnoreCase("N"))
+				temp = temp + "0 ";
+			else
+				temp = temp + "1 ";
+			temp = temp + "1:" + (Double.parseDouble(RRiperData.get(i-1)[0])/1000) + " ";
+			temp = temp + "2:" + (Double.parseDouble(RRiperData.get(i-1)[1])/1000) + "\n";
+		}
+		fw.write(temp);
+		fw.close(); 
+	}
+
+	private void OutputSVMTrainingData() throws IOException {
+		FileWriter fw = new FileWriter(OutputTrainingFile);
+		String temp ="";
+		String[] t;
+		for(int i=(ArrythmiaList.size()/2+1);i<ArrythmiaList.size();i++){
+			t = ArrythmiaList.get(i);
+			if(t[2].equalsIgnoreCase("N"))
+				temp = temp + "0 ";
+			else
+				temp = temp + "1 ";
+			temp = temp + "1:" + (Double.parseDouble(RRiperData.get(i-1)[0])/1000) + " ";
+			temp = temp + "2:" + (Double.parseDouble(RRiperData.get(i-1)[1])/1000) + "\n";
+		}
+		fw.write(temp);
+		fw.close(); 
+	}
+
 	private ArrayList<String[]> tranformRawData() throws IOException{
 		FileReader fr = new FileReader(ECGAtrFile);
 		BufferedReader bfr = new BufferedReader(fr);
